@@ -13,7 +13,7 @@ import { auth } from './middlewares/auth.js';
 import { NotFoundError } from './utils/errors.js';
 import { requestLogger, errorLogger } from './middlewares/logger.js';
 
-const { PORT = 3100 } = process.env;
+const { PORT = 3102 } = process.env;
 const config = dotenv.config({
   path: path
     .resolve(process.env.NODE_ENV === 'production' ? '.env' : '.env.common'),
