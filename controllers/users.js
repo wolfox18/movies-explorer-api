@@ -5,6 +5,7 @@ import { User } from '../models/users.js';
 import {
   NotFoundError, BadRequestError, ConflictError,
 } from '../utils/errors.js';
+import { messages } from '../utils/utils.js';
 
 export const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -34,9 +35,9 @@ export const createUser = (req, res, next) => {
       })
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          next(new BadRequestError('Введены некорректные данные'));
+          next(new BadRequestError(messages.invalidDataMessage));
         } else if (err.code === 11000) {
-          next(new ConflictError('Пользователь с такой почтой уже существует'));
+          next(new ConflictError(messages.userWithSameEmailMessage));
         } else {
           next(err);
         }
@@ -48,22 +49,22 @@ export const readMe = (req, res, next) => {
     .then((user) => {
       if (user) res.send(user);
       else {
-        next(new NotFoundError('Пользователь не найден'));
+        next(new NotFoundError(messages.userUnfoundMessage));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Введены некорректные данные'));
+        next(new BadRequestError(messages.invalidDataMessage));
       }
       next(err);
     });
 };
 
 export const editMe = (req, res, next) => {
-  const { name } = req.body;
+  const { name, email } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    { name },
+    { name, email },
     { new: true, runValidators: true },
   )
     .then((user) => {
@@ -77,6 +78,8 @@ export const editMe = (req, res, next) => {
         next(new BadRequestError('Введены некорректные данные'));
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Введены некорректные данные'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с такой почтой уже существует'));
       } else {
         next(err);
       }

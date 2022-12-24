@@ -1,67 +1,68 @@
 import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
+import { messages } from '../utils/utils.js';
 
 const filmSchema = new Schema({
   country: {
     type: String,
-    reqired: true,
+    required: true,
   },
   director: {
     type: String,
-    reqired: true,
+    required: true,
   },
   duration: {
     type: Number,
-    reqired: true,
+    required: true,
   },
   year: {
     type: String,
-    reqired: true,
+    required: true,
   },
   description: {
     type: String,
-    reqired: true,
+    required: true,
   },
   image: {
     type: String,
-    reqired: true,
+    required: true,
     validate: {
       validator: (url) => validator.isURL(url),
-      message: () => 'Введите корректный URL',
+      message: () => messages.enterValidUrlMessage,
     },
   },
   trailerLink: {
     type: String,
-    reqired: true,
+    required: true,
     validate: {
       validator: (url) => validator.isURL(url),
-      message: () => 'Введите корректный URL',
+      message: () => messages.enterValidUrlMessage,
     },
   },
   thumbnail: {
     type: String,
-    reqired: true,
+    required: true,
     validate: {
       validator: (url) => validator.isURL(url),
-      message: () => 'Введите корректный URL',
+      message: () => messages.enterValidUrlMessage,
     },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'users',
     required: true,
   },
   movieId: {
-    type: String,
-    reqired: true,
+    type: Number,
+    required: true,
   },
   nameRU: {
     type: String,
-    reqired: true,
+    required: true,
   },
   nameEN: {
     type: String,
-    reqired: true,
+    required: true,
   },
 });
 

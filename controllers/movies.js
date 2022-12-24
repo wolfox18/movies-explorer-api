@@ -3,6 +3,7 @@ import { Movie } from '../models/movies.js';
 import {
   NotFoundError, BadRequestError, ForbiddenError,
 } from '../utils/errors.js';
+import { messages } from '../utils/utils.js';
 
 export const readAll = (req, res, next) => {
   Movie.find({}).populate('owner')
@@ -40,18 +41,18 @@ export const create = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Введены некорректные данные'));
+        next(new BadRequestError(messages.invalidDataMessage));
       } else next(err);
     });
 };
 
 export const deleteById = (req, res, next) => {
-  Movie.findById({ _id: req.params.cardId })
+  Movie.findById({ _id: req.params.id })
     .then((movie) => {
       if (!movie) {
         throw (new NotFoundError('Фильм не найден'));
       } else if (movie.owner.toString() !== req.user._id) {
-        throw (new ForbiddenError('Вы не можете удалить чужой фильм'));
+        throw (new ForbiddenError(messages.youCantDeletNotYourMovieMessage));
       } else {
         return movie.remove();
       }
@@ -61,7 +62,7 @@ export const deleteById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(messages.invalidDataMessage));
       } else next(err);
     });
 };

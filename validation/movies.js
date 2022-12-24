@@ -3,21 +3,22 @@ import { urlRegEx } from '../utils/utils.js';
 
 export const celebrateMovieCreate = celebrate({
   body: Joi.object().keys({
-    country: Joi.string().min(2).max(30).required(),
-    director: Joi.string().min(2).max(30).required(),
+    country: Joi.string().required(),
+    director: Joi.string().required(),
     duration: Joi.number().required(),
-    year: Joi.string().min(4).max(4).required(),
+    year: Joi.string().required(),
     description: Joi.string().min(2).max(50).required(),
     image: Joi.string().regex(urlRegEx).required(),
     trailerLink: Joi.string().regex(urlRegEx).required(),
     thumbnail: Joi.string().regex(urlRegEx).required(),
-    nameRU: Joi.string().min(2).max(30).required(),
-    nameEN: Joi.string().min(2).max(30).required(),
+    movieId: Joi.string().hex().length(24).required(),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
   }),
 });
 
 export const celebrateMovieId = celebrate({
   params: Joi.object({
-    movieId: Joi.string().hex().length(24).required(),
+    id: Joi.string().hex().length(24).required(),
   }).required(),
 });

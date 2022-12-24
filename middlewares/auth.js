@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../utils/errors.js';
+import { messages } from '../utils/utils.js';
 
 export const auth = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError('Необходима авторизация'));
+    next(new UnauthorizedError(messages.authorizationNeededMessage));
     return;
   }
 
@@ -17,7 +18,7 @@ export const auth = (req, res, next) => {
     req.user = payload;
     next();
   } catch (err) {
-    next(new UnauthorizedError('Необходима авторизация'));
+    next(new UnauthorizedError(messages.authorizationNeededMessage));
     next();
   }
 };

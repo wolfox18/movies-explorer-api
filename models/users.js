@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import bcryptjs from 'bcryptjs';
 import { UnauthorizedError } from '../utils/errors.js';
+import { messages } from '../utils/utils.js';
 
 const userSchema = new Schema({
   name: {
@@ -9,6 +10,7 @@ const userSchema = new Schema({
     default: 'Жарь-Лук де Блюю',
     minlength: 2,
     maxlength: 30,
+    required: true,
   },
   email: {
     type: String,
@@ -16,7 +18,7 @@ const userSchema = new Schema({
     unique: true,
     validate: {
       validator: (email) => validator.isEmail(email),
-      message: () => 'Введите корректный email',
+      message: () => messages.enterValidEmailMessage,
     },
   },
   password: {
@@ -31,12 +33,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((document) => {
       if (!document) {
-        throw new UnauthorizedError('Неправильные почта или пароль');
+        throw new UnauthorizedError(messages.uncorrectCredentialsMessage);
       }
       return bcryptjs.compare(password, document.password)
         .then((matched) => {
           if (!matched) {
-            throw new UnauthorizedError('Неправильные почта или пароль');
+            throw new UnauthorizedError(messages.uncorrectCredentialsMessage);
           }
           const user = document.toObject();
           delete user.password;
