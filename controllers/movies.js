@@ -50,7 +50,7 @@ export const deleteById = (req, res, next) => {
   Movie.findById({ _id: req.params.id })
     .then((movie) => {
       if (!movie) {
-        throw (new NotFoundError('Фильм не найден'));
+        throw (new NotFoundError(messages.movieNotFoundMessage));
       } else if (movie.owner.toString() !== req.user._id) {
         throw (new ForbiddenError(messages.youCantDeletNotYourMovieMessage));
       } else {

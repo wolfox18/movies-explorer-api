@@ -7,9 +7,6 @@ import { messages } from '../utils/utils.js';
 const userSchema = new Schema({
   name: {
     type: String,
-    default: 'Жарь-Лук де Блюю',
-    minlength: 2,
-    maxlength: 30,
     required: true,
   },
   email: {

@@ -1,22 +1,18 @@
 import { Router } from 'express';
-import {
-  login, createUser, readMe, editMe,
-} from '../controllers/users.js';
-import { celebrateUserCreate, celebrateUserLogin, celebrateUserEdit } from '../validation/users.js';
-import {
-  readAll, deleteById, create,
-} from '../controllers/movies.js';
-import { celebrateMovieCreate, celebrateMovieId } from '../validation/movies.js';
+import { auth } from '../middlewares/auth.js';
+import { signRouter } from './sign.js';
+import { usersRouter } from './users.js';
+import { moviesRouter } from './movies.js';
+import { NotFoundError } from '../utils/NotFoundError.js';
+import { messages } from '../utils/utils.js';
 
-export const signRouter = Router();
-signRouter.post('/signin', celebrateUserLogin, login);
-signRouter.post('/signup', celebrateUserCreate, createUser);
+export const appRouter = Router();
 
-export const usersRouter = Router();
-usersRouter.get('/users/me', readMe);
-usersRouter.patch('/users/me', celebrateUserEdit, editMe);
+appRouter.use('/', signRouter);
+appRouter.use(auth);
+appRouter.use('/users', usersRouter);
+appRouter.use('/movies', moviesRouter);
 
-export const moviesRouter = Router();
-moviesRouter.get('/movies', readAll);
-moviesRouter.post('/movies', celebrateMovieCreate, create);
-moviesRouter.delete('/movies/:id', celebrateMovieId, deleteById);
+appRouter.all('/*', (req, res, next) => {
+  next(new NotFoundError(messages.pageNotFoundErrorMessage));
+});

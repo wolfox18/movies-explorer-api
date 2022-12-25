@@ -17,4 +17,5 @@ export const messages = {
   userUnfoundMessage: 'Пользователь не найден',
   userWithSameEmailMessage: 'Пользователь с такой почтой уже существует',
   uncorrectCredentialsMessage: 'Неправильные почта или пароль',
+  movieNotFoundMessage: 'Фильм не найден',
 };

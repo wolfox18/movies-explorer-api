@@ -6,12 +6,9 @@ import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
-import { usersRouter, moviesRouter, signRouter } from './routes/index.js';
-import { auth } from './middlewares/auth.js';
-import { NotFoundError } from './utils/errors.js';
+import { appRouter } from './routes/index.js';
 import { requestLogger, errorLogger } from './middlewares/logger.js';
 import { errorsHandler } from './middlewares/errors.js';
-import { messages } from './utils/utils.js';
 import { limiter } from './middlewares/limiter.js';
 
 const { PORT = 3102 } = process.env;
@@ -42,15 +39,10 @@ app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 
-app.use('/', signRouter);
-app.use(auth);
-app.use('/', usersRouter);
-app.use('/', moviesRouter);
-app.use('*', (req, res, next) => next(new NotFoundError(messages.pageNotFoundErrorMessage)));
+app.use(appRouter);
 
 app.use(errorLogger);
 app.use(errors());
-// централизованный обработчик ошибок
 app.use(errorsHandler);
 
 app.listen(PORT, () => {

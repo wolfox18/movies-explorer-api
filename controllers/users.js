@@ -70,16 +70,16 @@ export const editMe = (req, res, next) => {
     .then((user) => {
       if (user) res.send(user);
       else {
-        next(new NotFoundError('Пользователь не найден'));
+        next(new NotFoundError(messages.userUnfoundMessage));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Введены некорректные данные'));
+        next(new BadRequestError(messages.invalidDataMessage));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Введены некорректные данные'));
+        next(new BadRequestError(messages.invalidDataMessage));
       } else if (err.code === 11000) {
-        next(new ConflictError('Пользователь с такой почтой уже существует'));
+        next(new ConflictError(messages.userWithSameEmailMessage));
       } else {
         next(err);
       }
