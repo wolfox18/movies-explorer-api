@@ -6,7 +6,7 @@ import {
 import { messages } from '../utils/utils.js';
 
 export const readAll = (req, res, next) => {
-  Movie.find({}).populate('owner')
+  Movie.find({ owner: req.user._id })
     .then((movie) => {
       res.send(movie);
     })
